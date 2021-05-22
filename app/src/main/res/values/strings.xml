@@ -1,0 +1,46 @@
+<resources>
+    <string name="app_name">DaLlamada</string>
+    //Error
+    <string name="error_empty_field">Campo requerido</string>
+    <string name="error_email_not_valid">Introduza un email válido</string>
+    <string name="error_user_used">Este email ya está en uso</string>
+    <string name="error_password_short">La contraseña es demasiado corta, al menos 6 caracteres</string>
+    <string name="error_password_not_match">Las contraseñas no coinciden</string>
+    <string name="error_login_failed">El email o contraseña son incorrectos</string>
+    <string name="error_register_failed">Error de registro</string>
+    <string name="error_send_recover_pass_email">Error al enviar correo, compruebe el email</string>
+
+    //LoginActivity
+    <string name="login_title">INICIO DE SESIÓN</string>
+    <string name="login_email">Email</string>
+    <string name="login_password">Contraseña</string>
+    <string name="login_forgot_password">¿Olvidó su contraseña?</string>
+    <string name="login_noAccount">¿No tiene cuenta?</string>
+    <string name="login_signIn">INICIAR SESIÓN</string>
+    <string name="login_register">Registrarse</string>
+    //RegisterActivity
+    <string name="register_title">REGISTRO</string>
+    <string name="register_username">Nombre de usuario</string>
+    <string name="register_email">Email</string>
+    <string name="register_password">Contraseña</string>
+    <string name="register_repeat_password">Repita su contraseña</string>
+    <string name="register_button">REGISTRARSE</string>
+    <string name="register_accountAlready">¿Ya tiene cuenta?</string>
+    <string name="register_signIn">Iniciar Sesión</string>
+    <string name="register_succeded">Registro completado</string>
+    //ForgotPassActivity
+    <string name="forgotPass_title">RESTABLECER CONTRASEÑA</string>
+    <string name="forgotPass_email">Email</string>
+    <string name="forgotPass_reset">Restablecer</string>
+    <string name="forgotPass_back_login">Iniciar sesión</string>
+    <string name="forgotPass_send_email">Correo enviado</string>
+    //MainActivity
+    //BottomNavigationMenu
+    <string name="menu_profile">Perfil</string>
+    <string name="menu_events">Eventos</string>
+    <string name="menu_chat">Chat</string>
+    <string name="menu_news">Noticias</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+</resources>
