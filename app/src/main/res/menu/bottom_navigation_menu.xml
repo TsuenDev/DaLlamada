@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/fragmentProfile"
+        android:checked="true"
+        android:icon="@android:drawable/ic_menu_info_details"
+        android:title="@string/menu_profile" />
+
+    <item
+        android:id="@+id/fragmentEvents"
+        android:icon="@android:drawable/sym_action_chat"
+        android:title="@string/menu_events" />
+
+    <item
+        android:id="@+id/fragmentChat"
+        android:icon="@android:drawable/ic_menu_report_image"
+        android:title="@string/menu_chat" />
+
+    <item
+        android:id="@+id/fragmentNews"
+        android:icon="@android:drawable/ic_menu_search"
+        android:title="@string/menu_news" />
+</menu>
