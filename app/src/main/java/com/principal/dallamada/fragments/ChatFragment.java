@@ -1,66 +1,153 @@
 package com.principal.dallamada.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.principal.dallamada.R;
+import com.principal.dallamada.adapters.ChatAdapter;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ChatFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class ChatFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private FirebaseFirestore mFirestore;
 
-    public ChatFragment() {
-        // Required empty public constructor
-    }
+    private TextView chat;
+    private EditText sendMessageInput;
+    private ImageButton sendMessageButton;
+    RecyclerView chatRecycler;
+    ChatAdapter chatAdapter;
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ChatFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ChatFragment newInstance(String param1, String param2) {
-        ChatFragment fragment = new ChatFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
+    private static final String TAG = "CHAT";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_chat, container, false);
+        View v = inflater.inflate(R.layout.fragment_chat, container, false);
+
+        sendMessageInput = v.findViewById(R.id.inputMessageChat);
+        sendMessageButton = v.findViewById(R.id.buttonMessageChat);
+
+        mFirestore = FirebaseFirestore.getInstance();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+
+        mFirestore.collection("users")
+                .document(user.getEmail()).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                        DocumentSnapshot document = task.getResult();
+
+
+        //Método recoge los ultimos mensajes guardados en la base de datos y los pone en pantalla
+
+                        mFirestore.collection("groups")
+                                .document(document.getString("selectedGroup"))
+                                .collection("messages")
+                                .orderBy("time", Query.Direction.DESCENDING)
+                                .limit(50)
+                                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onEvent(@Nullable QuerySnapshot value,
+                                                        @Nullable FirebaseFirestoreException e) {
+                                        if (e != null) {
+                                            Log.w(TAG, "Listen failed.", e);
+                                            return;
+                                        }
+
+                                        List<String> messages = new ArrayList<>();
+                                        List<String> users = new ArrayList<>();
+                                        List<String> icons = new ArrayList<>();
+
+                                        for (QueryDocumentSnapshot doc : value) {
+                                            if (doc.get("text") != null) {
+
+                                                users.add(doc.getString("user"));
+                                                messages.add(doc.getString("text"));
+                                                icons.add(doc.getString("imgProfile"));
+
+                                            }
+                                        }
+
+                                        //Añade el adapter al recycler view, es decir, añade cada mensaje de chat a la pantalla de mensajes
+                                        chatRecycler = v.findViewById(R.id.chatReclycler);
+                                        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, true);
+                                        chatRecycler.setLayoutManager(layoutManager);
+                                        chatAdapter = new ChatAdapter(messages, users, icons);
+                                        chatRecycler.setAdapter(chatAdapter);
+
+                                    }
+                                });
+                    }
+                });
+
+
+        //Este metodo recoge el texto del input y el tiempo en milisegundos y los añade al grupo de la persona
+        sendMessageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mFirestore.collection("users")
+                        .document(user.getEmail()).get()
+                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                                DocumentSnapshot document = task.getResult();
+
+                                if (sendMessageInput.getText().length() == 0) {
+
+                                }else{
+                                    Map<String, Object> message = new HashMap<>();
+                                    message.put("time", System.currentTimeMillis());
+                                    message.put("user", document.getString("username").split("#")[0]);
+                                    message.put("text", sendMessageInput.getText().toString());
+                                    message.put("imgProfile", document.getString("imgProfile"));
+
+
+                                    mFirestore.collection("groups")
+                                            .document(document.getString("selectedGroup"))
+                                            .collection("messages")
+                                            .document()
+                                            .set(message);
+                                    sendMessageInput.getText().clear();
+                                }
+                            }
+                        });
+            }
+        });
+
+        return v;
     }
+
+
 }

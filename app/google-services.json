@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "605711314205",
+    "project_id": "dallamada",
+    "storage_bucket": "dallamada.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:605711314205:android:788f545110e3534f1905f4",
+        "android_client_info": {
+          "package_name": "com.example.dallamada"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "605711314205-u1j36m8omcbvrvceubulhedm7j17ttca.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.dallamada",
+            "certificate_hash": "771801a80f984bba3ffeb76401487d1f180c7ddb"
+          }
+        },
+        {
+          "client_id": "605711314205-m80p7a672o95d5jqi9hkatae0j9g9djr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCE7ckpphrxrTWmLOQDj4j4kooXgNRjItA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "605711314205-m80p7a672o95d5jqi9hkatae0j9g9djr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

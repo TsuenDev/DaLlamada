@@ -69,7 +69,12 @@ public class RegisterActivity extends AppCompatActivity {
                 String username = editTextUsername.getText().toString().trim();
 
                 progressBarRegister.setVisibility(View.VISIBLE);
-                createAccount(email, username, password);
+                if(validateValues()){
+                    createAccount(email, username, password);
+                }else {
+                    progressBarRegister.setVisibility(View.GONE);
+                }
+
             }
         });
 
@@ -100,6 +105,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 Map<String, Object> user = new HashMap<>();
                                 user.put("username", username + "#" + randomNumber);
                                 user.put("email" , email);
+                                user.put("selectedGroup","null");
                                 user.put("imgProfile", "https://firebasestorage.googleapis.com/v0/b/dallamada.appspot.com/o/din.png?alt=media&token=8b57121c-ce71-4554-b1d7-8383559ea7ed");
                                 mFirestore.collection("users").document(email).set(user);
                                 Log.d(TAG, "savedUserDataInDatabase:success");
@@ -122,6 +128,7 @@ public class RegisterActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
                             addUserDatabase(email, username, password);
+                            mAuth.signOut();
                             Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
                             startActivity(intent);
                             Toast.makeText(RegisterActivity.this, "Usuario creado", Toast.LENGTH_SHORT).show();
