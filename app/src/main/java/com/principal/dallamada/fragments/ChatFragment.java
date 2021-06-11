@@ -40,7 +40,6 @@ public class ChatFragment extends Fragment {
 
     private FirebaseFirestore mFirestore;
 
-    private TextView chat;
     private EditText sendMessageInput;
     private ImageButton sendMessageButton;
     RecyclerView chatRecycler;
@@ -51,7 +50,9 @@ public class ChatFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_chat, container, false);
+        // Inflate the layout for this fragment
+        View v = inflater.inflate(R.layout.fragment_chat, container, true);
+
 
         sendMessageInput = v.findViewById(R.id.inputMessageChat);
         sendMessageButton = v.findViewById(R.id.buttonMessageChat);
@@ -68,9 +69,7 @@ public class ChatFragment extends Fragment {
 
                         DocumentSnapshot document = task.getResult();
 
-
-        //Método recoge los ultimos mensajes guardados en la base de datos y los pone en pantalla
-
+                        // Método que recoge los ultimos mensajes y los pone en pantalla
                         mFirestore.collection("groups")
                                 .document(document.getString("selectedGroup"))
                                 .collection("messages")
@@ -87,23 +86,22 @@ public class ChatFragment extends Fragment {
 
                                         List<String> messages = new ArrayList<>();
                                         List<String> users = new ArrayList<>();
-                                        List<String> icons = new ArrayList<>();
+
 
                                         for (QueryDocumentSnapshot doc : value) {
                                             if (doc.get("text") != null) {
 
                                                 users.add(doc.getString("user"));
                                                 messages.add(doc.getString("text"));
-                                                icons.add(doc.getString("imgProfile"));
 
                                             }
                                         }
 
-                                        //Añade el adapter al recycler view, es decir, añade cada mensaje de chat a la pantalla de mensajes
+                                        //Se añade el adapter al recyclerView
                                         chatRecycler = v.findViewById(R.id.chatReclycler);
-                                        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, true);
+                                        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
                                         chatRecycler.setLayoutManager(layoutManager);
-                                        chatAdapter = new ChatAdapter(messages, users, icons);
+                                        chatAdapter = new ChatAdapter(messages, users);
                                         chatRecycler.setAdapter(chatAdapter);
 
                                     }
@@ -112,7 +110,7 @@ public class ChatFragment extends Fragment {
                 });
 
 
-        //Este metodo recoge el texto del input y el tiempo en milisegundos y los añade al grupo de la persona
+        //Metodo recoge el texto del input y el tiempo en milisegundos y los añade al grupo de la persona
         sendMessageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -126,10 +124,10 @@ public class ChatFragment extends Fragment {
 
                                 if (sendMessageInput.getText().length() == 0) {
 
-                                }else{
+                                } else {
                                     Map<String, Object> message = new HashMap<>();
                                     message.put("time", System.currentTimeMillis());
-                                    message.put("user", document.getString("username").split("#")[0]);
+                                    message.put("user", document.getString("username"));
                                     message.put("text", sendMessageInput.getText().toString());
                                     message.put("imgProfile", document.getString("imgProfile"));
 
@@ -142,6 +140,7 @@ public class ChatFragment extends Fragment {
                                     sendMessageInput.getText().clear();
                                 }
                             }
+
                         });
             }
         });

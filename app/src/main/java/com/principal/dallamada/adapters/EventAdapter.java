@@ -21,10 +21,11 @@ import com.principal.dallamada.R;
 
 import java.util.List;
 
-public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
+public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> {
 
     private List<String> messagesData;
-    private List<String> userData;
+
+    private List<String> titleData;
 
 
     private static final String TAG = "ChatAdapter";
@@ -39,6 +40,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         public ViewHolder(View view) {
             super(view);
             // Define click listener for the ViewHolder's View
+
             textView = view.findViewById(R.id.textAdapterChat);
             username = view.findViewById(R.id.usernameAdapterChat);
             imageProfile = view.findViewById(R.id.imageProfileAdapterChat);
@@ -58,9 +60,10 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         }
     }
 
-    public ChatAdapter(List<String> messages, List<String> user) {
-        messagesData = messages;
-        userData = user;
+    public EventAdapter(List<String> text, List<String> title) {
+
+        messagesData = text;
+        titleData = title;
 
 
     }
@@ -78,25 +81,11 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
-        FirebaseFirestore mFirestore = FirebaseFirestore.getInstance();
 
         viewHolder.getTextView().setText(messagesData.get(position));
-        viewHolder.getUsername().setText(userData.get(position).split("#")[0] + ":");
+        viewHolder.getUsername().setText(titleData.get(position));
 
-        mFirestore.collection("users").whereEqualTo("username", userData.get(position))
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException e) {
 
-                        String img = "https://firebasestorage.googleapis.com/v0/b/dallamada.appspot.com/o/din.png?alt=media&token=8b57121c-ce71-4554-b1d7-8383559ea7ed";
-
-                        for (QueryDocumentSnapshot doc : value) {
-                            img = doc.getString("imgProfile");
-                        }
-
-                        Glide.with(viewHolder.getContext()).load(img).into(viewHolder.imageProfile);
-                    }
-                });
     }
 
     // Return the size of your dataset (invoked by the layout manager)

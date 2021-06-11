@@ -69,9 +69,9 @@ public class RegisterActivity extends AppCompatActivity {
                 String username = editTextUsername.getText().toString().trim();
 
                 progressBarRegister.setVisibility(View.VISIBLE);
-                if(validateValues()){
+                if (validateValues()) {
                     createAccount(email, username, password);
-                }else {
+                } else {
                     progressBarRegister.setVisibility(View.GONE);
                 }
 
@@ -104,9 +104,9 @@ public class RegisterActivity extends AppCompatActivity {
 
                                 Map<String, Object> user = new HashMap<>();
                                 user.put("username", username + "#" + randomNumber);
-                                user.put("email" , email);
-                                user.put("selectedGroup","null");
-                                user.put("imgProfile", "https://firebasestorage.googleapis.com/v0/b/dallamada.appspot.com/o/din.png?alt=media&token=8b57121c-ce71-4554-b1d7-8383559ea7ed");
+                                user.put("email", email);
+                                user.put("selectedGroup", "null");
+                                user.put("imgProfile", "https://firebasestorage.googleapis.com/v0/b/dallamada.appspot.com/o/users%2Fandyluilin%40hotmail.com.jpg?alt=media&token=d665582d-1802-448c-a681-b6cdcc9a5539");
                                 mFirestore.collection("users").document(email).set(user);
                                 Log.d(TAG, "savedUserDataInDatabase:success");
 

@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
         navigationView = findViewById(R.id.bottomNavigationView);
 
-        navigationView.setOnNavigationItemSelectedListener( new BottomNavigationView.OnNavigationItemSelectedListener() {
+        navigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
@@ -65,14 +65,14 @@ public class MainActivity extends AppCompatActivity {
                 }
                 return true;
             }
-        } );
+        });
 
     }
 
-    public void loadFragment (Fragment fragment){
+    public void loadFragment(Fragment fragment) {
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.frameLayout,fragment);
+        transaction.replace(R.id.frameLayout, fragment);
         transaction.commit();
     }
 }

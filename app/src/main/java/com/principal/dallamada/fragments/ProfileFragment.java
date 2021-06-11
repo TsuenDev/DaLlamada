@@ -56,76 +56,85 @@ public class ProfileFragment extends Fragment {
     private Button btn_logOut;
     private static final int PICK_PHOTO_FOR_AVATAR = 0;
 
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate( R.layout.fragment_profile, container, false );
+        View v = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        imgProfile = v.findViewById( R.id.imageProfile );
-        textViewUsername = v.findViewById( R.id.textViewUsernameProfile );
-        textViewEmail = v.findViewById( R.id.textViewEmailProfile );
-        switchBtn = v.findViewById( R.id.switchDarkMode );
-        btn_logOut = v.findViewById( R.id.btn_log_out );
-        textViewChangeImage = v.findViewById( R.id.changeImageProfile );
+        imgProfile = v.findViewById(R.id.imageProfile);
+        textViewUsername = v.findViewById(R.id.textViewUsernameProfile);
+        textViewEmail = v.findViewById(R.id.textViewEmailProfile);
+        switchBtn = v.findViewById(R.id.switchDarkMode);
+        btn_logOut = v.findViewById(R.id.btn_log_out);
+        textViewChangeImage = v.findViewById(R.id.changeImageProfile);
 
 
         mAuth = FirebaseAuth.getInstance();
         mFirestore = FirebaseFirestore.getInstance();
 
-        mFirestore.collection( "users" )
-                .document( user.getEmail() )
+
+        mFirestore.collection("users")
+                .document(user.getEmail())
                 .get()
-                .addOnCompleteListener( new OnCompleteListener<DocumentSnapshot>() {
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
                         DocumentSnapshot document = task.getResult();
-                        textViewUsername.setText( "Nombre de usuario " + document.getString( "username" ) );
-                        textViewEmail.setText( "Email " + document.getString( "email" ) );
+                        textViewUsername.setText("Nombre de usuario " + document.getString("username"));
+                        textViewEmail.setText("Email " + document.getString("email"));
                         Glide.with(ProfileFragment.this).load(document.getString("imgProfile")).into(imgProfile);
                     }
-                } );
-        textViewChangeImage.setOnClickListener( new View.OnClickListener() {
+                });
+        textViewChangeImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 pickImage();
+
+
             }
-        } );
+        });
 
         checkingDarkMode();
-        switchBtn.setOnCheckedChangeListener( new CompoundButton.OnCheckedChangeListener() {
+        switchBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    AppCompatDelegate.setDefaultNightMode( AppCompatDelegate.MODE_NIGHT_YES );
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                 } else {
-                    AppCompatDelegate.setDefaultNightMode( AppCompatDelegate.MODE_NIGHT_NO );
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                 }
             }
-        } );
+        });
 
-        btn_logOut.setOnClickListener( new View.OnClickListener() {
+        btn_logOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mAuth.signOut();
-                Intent intent = new Intent( getActivity().getApplication(), LoginActivity.class );
-                startActivity( intent );
+                Intent intent = new Intent(getActivity().getApplication(), LoginActivity.class);
+                startActivity(intent);
             }
-        } );
+        });
         return v;
     }
 
     public void pickImage() {
-        Intent intent = new Intent( Intent.ACTION_GET_CONTENT );
-        intent.setType( "image/*" );
-        startActivityForResult( intent, PICK_PHOTO_FOR_AVATAR );
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
+        startActivityForResult(intent, PICK_PHOTO_FOR_AVATAR);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult( requestCode, resultCode, data );
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_PHOTO_FOR_AVATAR && resultCode == Activity.RESULT_OK) {
             if (data == null) {
                 //Display an error
@@ -135,10 +144,14 @@ public class ProfileFragment extends Fragment {
 
             try {
 
-                StorageReference storageRef = FirebaseStorage.getInstance( "gs://dallamada.appspot.com/" ).getReference();
-                StorageReference ref = storageRef.child( "users/" + user.getEmail() + ".jpg" );
-                InputStream inputStream = getContext().getContentResolver().openInputStream( data.getData() );
-                UploadTask uploadTask = ref.putStream( inputStream );
+                StorageReference storageRef = FirebaseStorage.getInstance("gs://dallamada.appspot.com/").getReference();
+
+                StorageReference ref = storageRef.child("users/" + user.getEmail() + ".jpg");
+
+                InputStream inputStream = getContext().getContentResolver().openInputStream(data.getData());
+
+                UploadTask uploadTask = ref.putStream(inputStream);
+
                 uploadTask.addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
@@ -150,9 +163,7 @@ public class ProfileFragment extends Fragment {
                         storageRef.child("users/" + user.getEmail() + ".jpg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
-                                mFirestore.collection("users").document( "test@gmail.com").update( "imgProfile",String.valueOf( uri ) );
-
-                                // Got the download URL for 'users/me/profile.png'
+                                mFirestore.collection("users").document("test@gmail.com").update("imgProfile", String.valueOf(uri));
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
@@ -175,11 +186,12 @@ public class ProfileFragment extends Fragment {
         int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
         switch (currentNightMode) {
             case Configuration.UI_MODE_NIGHT_NO:
-                switchBtn.setChecked( false );
+                switchBtn.setChecked(false);
                 break;
             case Configuration.UI_MODE_NIGHT_YES:
-                switchBtn.setChecked( true );
+                switchBtn.setChecked(true);
                 break;
         }
+
     }
 }

@@ -44,7 +44,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         textViewBackLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent( ForgotPasswordActivity.this, LoginActivity.class);
+                Intent intent = new Intent(ForgotPasswordActivity.this, LoginActivity.class);
                 startActivity(intent);
             }
         });
@@ -52,7 +52,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         btn_resetPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(validateValues()) {
+                if (validateValues()) {
                     String email = editTextEmail.getText().toString().trim();
                     progressBar.setVisibility(View.VISIBLE);
                     sendEmail(email);
@@ -62,7 +62,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     }
 
     //Método que enviará un email para restablecer la contraseña
-    private void sendEmail(String email){
+    private void sendEmail(String email) {
         mAuth = FirebaseAuth.getInstance();
 
         //Método para que Firebase envíe el correo en el idioma del dispositivo
@@ -72,15 +72,15 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                            @Override
                                            public void onComplete(@NonNull Task<Void> task) {
-                                               if(task.isSuccessful()){
+                                               if (task.isSuccessful()) {
                                                    Log.d(TAG, "ForgotPasswordEmail:success");
-                                                   Toast.makeText(ForgotPasswordActivity.this, getText(R.string.forgotPass_send_email),Toast.LENGTH_SHORT).show();
+                                                   Toast.makeText(ForgotPasswordActivity.this, getText(R.string.forgotPass_send_email), Toast.LENGTH_SHORT).show();
                                                    progressBar.setVisibility(View.GONE);
-                                                   Intent intent = new Intent( ForgotPasswordActivity.this, LoginActivity.class);
+                                                   Intent intent = new Intent(ForgotPasswordActivity.this, LoginActivity.class);
                                                    startActivity(intent);
-                                               }else{
+                                               } else {
                                                    Log.w(TAG, "signInWithEmail:failure", task.getException());
-                                                   Toast.makeText(ForgotPasswordActivity.this, getText(R.string.error_send_recover_pass_email),Toast.LENGTH_SHORT).show();
+                                                   Toast.makeText(ForgotPasswordActivity.this, getText(R.string.error_send_recover_pass_email), Toast.LENGTH_SHORT).show();
                                                    progressBar.setVisibility(View.GONE);
                                                }
                                            }
@@ -104,11 +104,11 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             editTextEmail.requestFocus();
             validate = false;
         } else {
-            if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+            if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                 editTextEmail.setError(getString(R.string.error_email_not_valid));
                 editTextEmail.requestFocus();
                 validate = false;
-            }else{
+            } else {
                 editTextEmail.setError(null);
             }
         }
