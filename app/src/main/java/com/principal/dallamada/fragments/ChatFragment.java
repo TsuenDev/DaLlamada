@@ -40,6 +40,7 @@ public class ChatFragment extends Fragment {
 
     private FirebaseFirestore mFirestore;
 
+    private TextView chat;
     private EditText sendMessageInput;
     private ImageButton sendMessageButton;
     RecyclerView chatRecycler;
@@ -51,7 +52,7 @@ public class ChatFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_chat, container, true);
+        View v = inflater.inflate(R.layout.fragment_chat, container, false);
 
 
         sendMessageInput = v.findViewById(R.id.inputMessageChat);
@@ -99,7 +100,7 @@ public class ChatFragment extends Fragment {
 
                                         //Se añade el adapter al recyclerView
                                         chatRecycler = v.findViewById(R.id.chatReclycler);
-                                        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
+                                        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, true);
                                         chatRecycler.setLayoutManager(layoutManager);
                                         chatAdapter = new ChatAdapter(messages, users);
                                         chatRecycler.setAdapter(chatAdapter);

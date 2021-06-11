@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginStart="10px">
 
     <ImageView
         android:id="@+id/imageProfileAdapterChat"
@@ -12,8 +13,10 @@
         tools:srcCompat="@tools:sample/avatars" />
 
     <LinearLayout
+        android:id="@+id/margin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10px"
         android:layout_toRightOf="@+id/imageProfileAdapterChat"
         android:orientation="vertical">
 
