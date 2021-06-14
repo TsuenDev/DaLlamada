@@ -58,7 +58,6 @@ public class CreateEventActivity extends AppCompatActivity {
                                 DocumentSnapshot document = task.getResult();
                                 SimpleDateFormat formating = new SimpleDateFormat("dd/MM/yyyy");
 
-
                                 Map<String, Object> event = new HashMap<>();
                                 event.put("sounded", false);
                                 event.put("user", document.getString("username"));
@@ -66,16 +65,11 @@ public class CreateEventActivity extends AppCompatActivity {
                                 event.put("text", textCreateEvent.getText().toString());
                                 event.put("date", date);
 
-
                                 mFirestore.collection("groups").document(document.getString("selectedGroup")).collection("events").document().set(event);
                                 finish();
-
-
                             }
                         });
             }
         });
-
-
     }
 }

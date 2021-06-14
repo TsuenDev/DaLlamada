@@ -103,11 +103,14 @@ public class RegisterActivity extends AppCompatActivity {
                                 String randomNumber = String.format("%04d", new Random().nextInt(9999));
 
                                 Map<String, Object> user = new HashMap<>();
+                                Map<String, Object> e = new HashMap<>();
                                 user.put("username", username + "#" + randomNumber);
                                 user.put("email", email);
                                 user.put("selectedGroup", "null");
-                                user.put("imgProfile", "https://firebasestorage.googleapis.com/v0/b/dallamada.appspot.com/o/users%2Fandyluilin%40hotmail.com.jpg?alt=media&token=d665582d-1802-448c-a681-b6cdcc9a5539");
+                                user.put("imgProfile", "https://firebasestorage.googleapis.com/v0/b/dallamada.appspot.com/o/din.png?alt=media&token=8b57121c-ce71-4554-b1d7-8383559ea7ed");
                                 mFirestore.collection("users").document(email).set(user);
+                                mFirestore.collection("users").document(email).collection("groups").document("cazafan").set(e);
+                                mFirestore.collection("users").document(email).collection("groups").document("prueba").set(e);
                                 Log.d(TAG, "savedUserDataInDatabase:success");
 
                                 progressBarRegister.setVisibility(View.GONE);

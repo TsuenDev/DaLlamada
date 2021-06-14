@@ -4,20 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="10px">
+    android:padding="2dp">
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/imageProfileAdapterChat"
         android:layout_width="70dp"
         android:layout_height="70dp"
+        android:padding="10dp"
         tools:srcCompat="@tools:sample/avatars" />
 
     <LinearLayout
-        android:id="@+id/margin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10px"
-        android:layout_toRightOf="@+id/imageProfileAdapterChat"
+        android:layout_toEndOf="@+id/imageProfileAdapterChat"
         android:orientation="vertical">
 
         <TextView

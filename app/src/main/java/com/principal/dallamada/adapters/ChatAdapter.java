@@ -26,7 +26,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
     private List<String> messagesData;
     private List<String> userData;
 
-
     private static final String TAG = "ChatAdapter";
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -35,10 +34,10 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         private final ImageView imageProfile;
         private final Context context;
 
-
         public ViewHolder(View view) {
             super(view);
             // Define click listener for the ViewHolder's View
+
             textView = view.findViewById(R.id.textAdapterChat);
             username = view.findViewById(R.id.usernameAdapterChat);
             imageProfile = view.findViewById(R.id.imageProfileAdapterChat);
@@ -93,7 +92,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
                         for (QueryDocumentSnapshot doc : value) {
                             img = doc.getString("imgProfile");
                         }
-
                         Glide.with(viewHolder.getContext()).load(img).into(viewHolder.imageProfile);
                     }
                 });

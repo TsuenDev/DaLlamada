@@ -28,38 +28,33 @@ import com.principal.dallamada.CreateEventActivity;
 import com.principal.dallamada.R;
 import com.principal.dallamada.adapters.EventAdapter;
 
+import com.applandeo.materialcalendarview.CalendarView;
+import com.applandeo.materialcalendarview.EventDay;
+import com.applandeo.materialcalendarview.listeners.OnDayClickListener;
+
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
-
-/*
-import sun.bob.mcalendarview.MCalendarView;
-import sun.bob.mcalendarview.listeners.OnDateClickListener;
-import sun.bob.mcalendarview.vo.DateData;
-*/
-
 
 public class EventsFragment extends Fragment {
 
     private FirebaseFirestore mFirestore;
     private static final String TAG = "EventFragment";
 
-    private Button sendEvent;
-    RecyclerView eventRecycler;
-    EventAdapter eventAdapter;
-
+    private RecyclerView eventRecycler;
+    private EventAdapter eventAdapter;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_events, container, false);
-        sendEvent = v.findViewById(R.id.btn_eventSend);
+        Button sendEvent = v.findViewById(R.id.btn_eventSend);
+        CalendarView calendarView = v.findViewById(R.id.eventCalendar);
 
-        //MCalendarView calendar = v.findViewById( R.id.calendarEvents );
+        List<EventDay> events = new ArrayList<>();
 
         mFirestore = FirebaseFirestore.getInstance();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
 
         mFirestore.collection("users")
                 .document(user.getEmail()).get()
@@ -67,76 +62,75 @@ public class EventsFragment extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
-                        DocumentSnapshot document = task.getResult();
-                        mFirestore.collection("groups").document("cazafan").collection("events")
+                        DocumentSnapshot e = task.getResult();
+                        mFirestore.collection("groups").document(e.getString("selectedGroup")).collection("events")
                                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                                     @Override
                                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException e) {
-
-
                                         String dateFormat = "";
+
                                         for (QueryDocumentSnapshot doc : value) {
+                                            Calendar calendar = Calendar.getInstance();
+
                                             dateFormat = doc.getString("date");
                                             int year = Integer.parseInt(dateFormat.split("/")[0]);
                                             int month = Integer.parseInt(dateFormat.split("/")[1]);
                                             int day = Integer.parseInt(dateFormat.split("/")[2]);
 
-                                            //calendar.markDate( year, month, day );
-
-
+                                            calendar.set(year, month, day);
+                                            events.add(new EventDay(calendar, R.drawable.phone));
                                         }
-
-
+                                        calendarView.setEvents(events);
                                     }
                                 });
                     }
                 });
 
-/*
-        calendar.setOnDateClickListener( new OnDateClickListener() {
+        calendarView.setOnDayClickListener(new OnDayClickListener() {
             @Override
-            public void onDateClick(View view, DateData date) {
-                mFirestore.collection( "users" )
-                        .document( user.getEmail() ).get()
-                        .addOnCompleteListener( new OnCompleteListener<DocumentSnapshot>() {
+            public void onDayClick(EventDay eventDay) {
+                Calendar clickedDayCalendar = eventDay.getCalendar();
+                Log.w(TAG, clickedDayCalendar.get(Calendar.YEAR) + "/" + clickedDayCalendar.get(Calendar.MONTH) + "/" + clickedDayCalendar.get(Calendar.DAY_OF_MONTH));
+
+                mFirestore.collection("users")
+                        .document(user.getEmail()).get()
+                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
-                                DocumentSnapshot document = task.getResult();
-                                mFirestore.collection( "groups" ).document( "cazafan" ).collection( "events" )
-                                        .addSnapshotListener( new EventListener<QuerySnapshot>() {
+                                DocumentSnapshot e = task.getResult();
+                                mFirestore.collection("groups").document(e.getString("selectedGroup")).collection("events")
+                                        .addSnapshotListener(new EventListener<QuerySnapshot>() {
                                             @Override
                                             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException e) {
 
 
                                                 List<String> title = new ArrayList<>();
                                                 List<String> text = new ArrayList<>();
-                                                String clickedDate = date.getYear() + "/" + date.getMonth() + "/" + date.getDay();
+                                                String clickedDate = clickedDayCalendar.get(Calendar.YEAR) + "/" +
+                                                        clickedDayCalendar.get(Calendar.MONTH) + "/" +
+                                                        clickedDayCalendar.get(Calendar.DAY_OF_MONTH);
 
 
                                                 for (QueryDocumentSnapshot doc : value) {
-                                                    if (clickedDate.equals( doc.getString( "date" ) )) {
-                                                        title.add( doc.getString( "title" ) );
-                                                        text.add( doc.getString( "text" ) );
+                                                    if (clickedDate.equals(doc.getString("date"))) {
+                                                        title.add(doc.getString("title"));
+                                                        text.add(doc.getString("text"));
                                                     }
-
-
                                                 }
 
-                                                eventRecycler = v.findViewById( R.id.recyclerEvents );
-                                                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager( getContext(), RecyclerView.VERTICAL, false );
-                                                eventRecycler.setLayoutManager( layoutManager );
-                                                eventAdapter = new EventAdapter( text, title );
-                                                eventRecycler.setAdapter( eventAdapter );
+                                                eventRecycler = v.findViewById(R.id.recyclerEvents);
+                                                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
+                                                eventRecycler.setLayoutManager(layoutManager);
+                                                eventAdapter = new EventAdapter(text, title);
+                                                eventRecycler.setAdapter(eventAdapter);
 
                                             }
-                                        } );
-
+                                        });
                             }
-                        } );
+                        });
             }
-        } );
-*/
+        });
 
         sendEvent.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,6 +143,4 @@ public class EventsFragment extends Fragment {
         });
         return v;
     }
-
-
 }

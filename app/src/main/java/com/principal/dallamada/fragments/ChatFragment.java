@@ -1,6 +1,5 @@
 package com.principal.dallamada.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -37,16 +35,14 @@ import java.util.Map;
 
 public class ChatFragment extends Fragment {
 
+    private static final String TAG = "CHAT";
 
     private FirebaseFirestore mFirestore;
 
-    private TextView chat;
     private EditText sendMessageInput;
     private ImageButton sendMessageButton;
     RecyclerView chatRecycler;
     ChatAdapter chatAdapter;
-
-    private static final String TAG = "CHAT";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -54,13 +50,11 @@ public class ChatFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_chat, container, false);
 
-
         sendMessageInput = v.findViewById(R.id.inputMessageChat);
         sendMessageButton = v.findViewById(R.id.buttonMessageChat);
 
         mFirestore = FirebaseFirestore.getInstance();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
 
         mFirestore.collection("users")
                 .document(user.getEmail()).get()
@@ -70,11 +64,12 @@ public class ChatFragment extends Fragment {
 
                         DocumentSnapshot document = task.getResult();
 
-                        // Método que recoge los ultimos mensajes y los pone en pantalla
+
+                        //Este metodo recoge los ultimos mensajes y los pone en pantalla
                         mFirestore.collection("groups")
                                 .document(document.getString("selectedGroup"))
                                 .collection("messages")
-                                .orderBy("time", Query.Direction.DESCENDING)
+                                .orderBy("time", Query.Direction.ASCENDING)
                                 .limit(50)
                                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                                     @Override
@@ -98,7 +93,7 @@ public class ChatFragment extends Fragment {
                                             }
                                         }
 
-                                        //Se añade el adapter al recyclerView
+                                        //Se añade el chat adapter al recycler view
                                         chatRecycler = v.findViewById(R.id.chatReclycler);
                                         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, true);
                                         chatRecycler.setLayoutManager(layoutManager);
@@ -110,8 +105,7 @@ public class ChatFragment extends Fragment {
                     }
                 });
 
-
-        //Metodo recoge el texto del input y el tiempo en milisegundos y los añade al grupo de la persona
+        //Este metodo recoge el texto del input y el tiempo en milisegundos y los añade al grupo de la persona
         sendMessageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -120,9 +114,7 @@ public class ChatFragment extends Fragment {
                         .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-
                                 DocumentSnapshot document = task.getResult();
-
                                 if (sendMessageInput.getText().length() == 0) {
 
                                 } else {
@@ -142,7 +134,9 @@ public class ChatFragment extends Fragment {
                                 }
                             }
 
+
                         });
+
             }
         });
 

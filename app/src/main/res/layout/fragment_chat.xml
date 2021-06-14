@@ -44,6 +44,7 @@
                 android:id="@+id/inputMessageChat"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/buttonMessageChat"
                 android:ems="10"
                 android:hint="Escribe un mensaje..."
                 android:inputType="textPersonName" />

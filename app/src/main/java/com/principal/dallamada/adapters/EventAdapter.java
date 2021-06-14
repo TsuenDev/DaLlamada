@@ -8,27 +8,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.principal.dallamada.R;
 
 import java.util.List;
 
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> {
 
-    private List<String> messagesData;
-
-    private List<String> titleData;
-
-
     private static final String TAG = "ChatAdapter";
+
+    private List<String> messagesData;
+    private List<String> titleData;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView textView;

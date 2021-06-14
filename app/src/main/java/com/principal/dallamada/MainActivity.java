@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -19,23 +20,24 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
 
-    BottomNavigationView navigationView;
-
     ProfileFragment profileFragment;
     ChatFragment chatFragment;
     EventsFragment eventsFragment;
     NewsFragment newsFragment;
+    BottomNavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        startService(new Intent(this, BackgroundEvents.class));
 
         profileFragment = new ProfileFragment();
         eventsFragment = new EventsFragment();
         chatFragment = new ChatFragment();
         newsFragment = new NewsFragment();
+
 
         //pre-render a fragmente
         loadFragment(profileFragment);
@@ -67,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
     }
 
     public void loadFragment(Fragment fragment) {
@@ -74,5 +77,19 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.frameLayout, fragment);
         transaction.commit();
+    }
+
+    @Override
+    public void onStop() {
+
+        super.onStop();
+        startService(new Intent(this, BackgroundEvents.class));
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+
     }
 }

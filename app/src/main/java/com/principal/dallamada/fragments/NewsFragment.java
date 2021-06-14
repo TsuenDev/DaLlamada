@@ -30,10 +30,10 @@ import retrofit2.Response;
 
 public class NewsFragment extends Fragment {
 
-    RecyclerView recyclerView;
-    SwipeRefreshLayout swipeRefreshLayout;
-    EditText etQuery;
-    Button btnSearch;
+    private RecyclerView recyclerView;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private EditText etQuery;
+    private Button btnSearch;
 
 
     final String API_KEY = "efe9c32aa439429e982f05d0592c21ba";

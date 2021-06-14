@@ -58,13 +58,9 @@ public class BackgroundEvents extends Service {
                                             return;
                                         }
 
-
                                         List<String> title = new ArrayList<>();
                                         for (QueryDocumentSnapshot doc : value) {
-
-
                                             title.add(doc.getString("title"));
-
                                         }
                                         if (!title.isEmpty()) {
                                             createNotificationChannel();
